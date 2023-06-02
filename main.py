@@ -29,10 +29,13 @@ utilisateur2 = Utilisateur(2 , "Annabeth", "Chase", " Beth", "456")
 listeUtilisateur = [utilisateur1, utilisateur2]
 
 
-def choixUtil(util):
+def choixUtil(util, pseudo, mdp):
     for i, utilisateur in enumerate(listeUtilisateur, 1):
         if util == i:
-            print("Bienvenue", utilisateur.prenomU)
+            if pseudo == utilisateur.pseudoU and mdp == utilisateur.mdpU:
+                print("Bienvenue", utilisateur.prenomU)
+            else:
+                print("Il y a une erreur dans le pseudo ou le mot de passe.")
 
 
 
@@ -47,4 +50,11 @@ while not util_str.isdigit() and not 1 <= int(util_str) < len(listeUtilisateur):
     util_str = input('> ')
 util = int(util_str)
 
-choixUtil(util)
+print("Pseudo:")
+pseudo = input('> ').capitalize()
+print()
+
+print("Mot de passe:")
+mdp = input('> ')
+
+choixUtil(util, pseudo, mdp)
