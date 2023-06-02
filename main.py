@@ -30,12 +30,11 @@ listeUtilisateur = [utilisateur1, utilisateur2]
 
 
 def choixUtil(util):
-    for i, utilisateur in listeUtilisateur:
+    for i, utilisateur in enumerate(listeUtilisateur, 1):
         if util == i:
             print("Bienvenue", utilisateur.prenomU)
 
 
-#print(listeUtilisateur[0].nomU)
 
 # Début du programme
 
@@ -48,5 +47,4 @@ while not util_str.isdigit() and not 1 <= int(util_str) < len(listeUtilisateur):
     util_str = input('> ')
 util = int(util_str)
 
-print(listeUtilisateur)
 choixUtil(util)
