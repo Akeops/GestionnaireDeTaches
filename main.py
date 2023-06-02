@@ -14,22 +14,20 @@ class Utilisateur:
         self.mdpU = mdpU
 @staticmethod
 def getUtilisateurs(listeUtilisateur):
-    #for i, utilisateur in listeUtilisateur:
     for i, utilisateur in enumerate(listeUtilisateur, 1):
         print(f"{i} -  {utilisateur.prenomU} {utilisateur.nomU} AKA '{utilisateur.pseudoU}'")
 
-    #@staticmethod
-    #def
 
 # Création de quelques objets Utilisateur
 utilisateur1 = Utilisateur(1 , "Andoni", "Lalanne", "Maven", "123")
-utilisateur2 = Utilisateur(2 , "Annabeth", "Chase", " Beth", "456")
+utilisateur2 = Utilisateur(2 , "Annabeth", "Chase", "Beth", "456")
 
 # Création de la liste des utilisateurs
-listeUtilisateur = [utilisateur1, utilisateur2]
+listeUtilisateur = []
+listeUtilisateur = utilisateur1, utilisateur2
 
 def getMessage(message):
-    max_size = max(len(message))
+    max_size = len(message)
     message += ' ' * (max_size - len(message))
     print('+' * (len(message) + 4))
     print('+', message, '+')
@@ -38,21 +36,22 @@ def getMessage(message):
 def choixUtil(util, pseudo, mdp):
     for i, utilisateur in enumerate(listeUtilisateur, 1):
         if util == i:
+            print(utilisateur.pseudoU)
             if pseudo == utilisateur.pseudoU and mdp == utilisateur.mdpU:
                 message = f"Bienvenue, {utilisateur.prenomU}"
-                print(message)
+                getMessage(message)
             else:
                 print("Il y a une erreur dans le pseudo ou le mot de passe.")
                 # Je remet ici le début du programme pour que l'utilisateur puisse faire un choix d'utilisateur même si il se trompe et ainsi ça fait une boucle
-                print("Bonjour, qui êtes-vous ?")
+                print("Bonjour, qui êtes-vous ? Taper 'EXIT' si vous voulez quitter.")
                 print()
                 getUtilisateurs(listeUtilisateur)
-                util_str = input('> ')
+                util_str = input('> ').lower()
                 print()
                 # l'utilisateur peut taper exit s'il veut quitter
                 if util_str == "exit":
                     message = "Aurevoir"
-                    print(message)
+                    getMessage(message)
                     break
 
                 while not util_str.isdigit() and not 1 <= int(util_str) < len(listeUtilisateur):
@@ -70,15 +69,19 @@ def choixUtil(util, pseudo, mdp):
                 choixUtil(util, pseudo, mdp)
 
 
+
 # Début du programme
 print()
-print("Bonjour, qui êtes-vous ?")
-print()
+print("Bonjour, qui êtes-vous ? Taper 'EXIT' si vous voulez quitter.")
+print(listeUtilisateur[0].pseudoU)
+
+# Affiche la liste des utilisateurs
 getUtilisateurs(listeUtilisateur)
-util_str = input('> ')
-while not util_str.isdigit() and not 1 <= int(util_str) < len(listeUtilisateur):
-    print("Choisissez un bon utilisateur.")
-    util_str = input('> ')
+util_str = input('> ').lower()
+if util_str == "exit":
+    message = "Aurevoir"
+    getMessage(message)
+
 util = int(util_str)
 
 print("Pseudo:")
@@ -88,4 +91,7 @@ print()
 print("Mot de passe:")
 mdp = input('> ')
 
+
 choixUtil(util, pseudo, mdp)
+
+
