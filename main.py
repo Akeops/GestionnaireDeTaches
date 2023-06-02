@@ -28,12 +28,19 @@ utilisateur2 = Utilisateur(2 , "Annabeth", "Chase", " Beth", "456")
 # Création de la liste des utilisateurs
 listeUtilisateur = [utilisateur1, utilisateur2]
 
+def getMessage(message):
+    max_size = max(len(message))
+    message += ' ' * (max_size - len(message))
+    print('+' * (len(message) + 4))
+    print('+', message, '+')
+    print('+' * (len(message) + 4))
 
 def choixUtil(util, pseudo, mdp):
     for i, utilisateur in enumerate(listeUtilisateur, 1):
         if util == i:
             if pseudo == utilisateur.pseudoU and mdp == utilisateur.mdpU:
-                print("Bienvenue", utilisateur.prenomU)
+                message = f"Bienvenue, {utilisateur.prenomU}"
+                print(message)
             else:
                 print("Il y a une erreur dans le pseudo ou le mot de passe.")
                 # Je remet ici le début du programme pour que l'utilisateur puisse faire un choix d'utilisateur même si il se trompe et ainsi ça fait une boucle
@@ -41,6 +48,13 @@ def choixUtil(util, pseudo, mdp):
                 print()
                 getUtilisateurs(listeUtilisateur)
                 util_str = input('> ')
+                print()
+                # l'utilisateur peut taper exit s'il veut quitter
+                if util_str == "exit":
+                    message = "Aurevoir"
+                    print(message)
+                    break
+
                 while not util_str.isdigit() and not 1 <= int(util_str) < len(listeUtilisateur):
                     print("Choisissez un bon utilisateur.")
                     util_str = input('> ')
@@ -57,7 +71,7 @@ def choixUtil(util, pseudo, mdp):
 
 
 # Début du programme
-
+print()
 print("Bonjour, qui êtes-vous ?")
 print()
 getUtilisateurs(listeUtilisateur)
