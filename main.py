@@ -36,7 +36,24 @@ def choixUtil(util, pseudo, mdp):
                 print("Bienvenue", utilisateur.prenomU)
             else:
                 print("Il y a une erreur dans le pseudo ou le mot de passe.")
+                # Je remet ici le début du programme pour que l'utilisateur puisse faire un choix d'utilisateur même si il se trompe et ainsi ça fait une boucle
+                print("Bonjour, qui êtes-vous ?")
+                print()
+                getUtilisateurs(listeUtilisateur)
+                util_str = input('> ')
+                while not util_str.isdigit() and not 1 <= int(util_str) < len(listeUtilisateur):
+                    print("Choisissez un bon utilisateur.")
+                    util_str = input('> ')
+                util = int(util_str)
 
+                print("Pseudo:")
+                pseudo = input('> ').capitalize()
+                print()
+
+                print("Mot de passe:")
+                mdp = input('> ')
+
+                choixUtil(util, pseudo, mdp)
 
 
 # Début du programme
