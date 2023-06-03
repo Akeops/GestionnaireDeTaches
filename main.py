@@ -42,7 +42,7 @@ def choixUtil(util, pseudo, mdp):
                 getMessage(message)
             else:
                 print("Il y a une erreur dans le pseudo ou le mot de passe.")
-                # Je remet ici le début du programme pour que l'utilisateur puisse faire un choix d'utilisateur même si il se trompe et ainsi ça fait une boucle
+                # Je remet ici le début du programme pour que l'utilisateur puisse faire un choix d'utilisateur même si il se trompe et ainsi faire une boucle
                 print("Bonjour, qui êtes-vous ? Taper 'EXIT' si vous voulez quitter.")
                 print()
                 getUtilisateurs(listeUtilisateur)
@@ -54,7 +54,7 @@ def choixUtil(util, pseudo, mdp):
                     getMessage(message)
                     break
 
-                while not util_str.isdigit() and not 1 <= int(util_str) < len(listeUtilisateur):
+                while not util_str.isdigit() or util_str != "exit" and not 1 <= int(util_str) < len(listeUtilisateur):
                     print("Choisissez un bon utilisateur.")
                     util_str = input('> ')
                 util = int(util_str)
@@ -78,6 +78,11 @@ print(listeUtilisateur[0].pseudoU)
 # Affiche la liste des utilisateurs
 getUtilisateurs(listeUtilisateur)
 util_str = input('> ').lower()
+while not util_str.isdigit() or util_str != "exit" and not 1 <= int(util_str) < len(listeUtilisateur):
+    print("Choisissez un bon utilisateur.")
+    util_str = input('> ')
+
+util = int(util_str)
 if util_str == "exit":
     message = "Aurevoir"
     getMessage(message)
@@ -90,7 +95,6 @@ print()
 
 print("Mot de passe:")
 mdp = input('> ')
-
 
 choixUtil(util, pseudo, mdp)
 
