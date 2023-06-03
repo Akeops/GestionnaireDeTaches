@@ -15,7 +15,7 @@ class Utilisateur:
 @staticmethod
 def getUtilisateurs(listeUtilisateur):
     for i, utilisateur in enumerate(listeUtilisateur, 1):
-        print(f"{i} -  {utilisateur.prenomU} {utilisateur.nomU} AKA '{utilisateur.pseudoU}'")
+        print(f"{i} -  {utilisateur.prenomU} {utilisateur.nomU}")
 
 
 # Création de quelques objets Utilisateur
@@ -24,19 +24,60 @@ utilisateur2 = Utilisateur(2 , "Annabeth", "Chase", "Beth", "456")
 
 # Création de la liste des utilisateurs
 listeUtilisateur = []
-listeUtilisateur = utilisateur1, utilisateur2
-
+listeUtilisateur.append(utilisateur1)
+listeUtilisateur.append(utilisateur2)
 def getMessage(message):
     max_size = len(message)
     message += ' ' * (max_size - len(message))
+    print()
     print('+' * (len(message) + 4))
     print('+', message, '+')
     print('+' * (len(message) + 4))
 
-def choixUtil(util, pseudo, mdp):
+
+def addUtilisateur(addUtil):
+    print("Quel est votre prénom ?")
+    name = input('> ')
+    while name.isdigit():
+        print('Votre nom ne peut pas comporter de nombre')
+        name = input('> ')
+    print("Quel est votre prénom ?")
+    firstName = input('> ')
+    while firstName.isdigit():
+        print('Votre prénom ne peut pas comporter de nombre')
+        firstName = input('> ')
+
+    print("Choisissez un pseudo, il vous permettra de vous connecter")
+    pseudo = input('> ')
+    for i, utilisateur in enumerate(listeUtilisateur, 1):
+        while utilisateur.pseudoU == pseudo:
+            print("Ce pseudo est déjà prit, veuillez en prendre un nouveau.")
+            pseudo = input('> ')
+
+    print("Choisissez un mot de passe")
+    mdp = input('> ')
+
+    nom_unique = True
+    for utilisateur in listeUtilisateur:
+        if utilisateur.pseudi == pseudo:
+            nom_unique = False
+            print('Il y a eu une erreur avec le pseudo')
+            break
+
+    if nom_unique:
+        utilisateur = Utilisateur(addUtil + 1, firstName, name, pseudo, mdp)
+    #utilisateur = "utilisateur" + str(addUtil + 1)
+
+
+
+
+
+
+
+
+def choixUtil(util, pseudo, mdp, addUtil):
     for i, utilisateur in enumerate(listeUtilisateur, 1):
         if util == i:
-            print(utilisateur.pseudoU)
             if pseudo == utilisateur.pseudoU and mdp == utilisateur.mdpU:
                 message = f"Bienvenue, {utilisateur.prenomU}"
                 getMessage(message)
@@ -46,6 +87,14 @@ def choixUtil(util, pseudo, mdp):
                 print("Bonjour, qui êtes-vous ? Taper 'EXIT' si vous voulez quitter.")
                 print()
                 getUtilisateurs(listeUtilisateur)
+                for i, utilisateur in enumerate(listeUtilisateur, 1):
+                    addUtil = len(listeUtilisateur)
+
+                if addUtil:
+                    print(f"{i + 1} -  Créer un nouvel utilisateur")
+                for i, utilisateur in enumerate(listeUtilisateur, 1):
+                    if len(listeUtilisateur) == i + 1:
+                        print(f"{i + 1} -  Créer un nouvel utilisateur")
                 util_str = input('> ').lower()
                 print()
                 # l'utilisateur peut taper exit s'il veut quitter
@@ -67,18 +116,24 @@ def choixUtil(util, pseudo, mdp):
                 mdp = input('> ')
 
                 choixUtil(util, pseudo, mdp)
+        if util == addUtil + 1:
+            addUtilisateur()
 
 
 
 # Début du programme
 print()
 print("Bonjour, qui êtes-vous ? Taper 'EXIT' si vous voulez quitter.")
-print(listeUtilisateur[0].pseudoU)
 
 # Affiche la liste des utilisateurs
 getUtilisateurs(listeUtilisateur)
+for i, utilisateur in enumerate(listeUtilisateur, 1):
+    addUtil = len(listeUtilisateur)
+
+if addUtil:
+    print(f"{addUtil + 1} -  Créer un nouvel utilisateur")
 util_str = input('> ').lower()
-while not util_str.isdigit() or util_str != "exit" and not 1 <= int(util_str) < len(listeUtilisateur):
+while not util_str.isdigit() or util_str != "exit" and not 1 <= int(util_str) <= len(listeUtilisateur):
     print("Choisissez un bon utilisateur.")
     util_str = input('> ')
 
@@ -87,7 +142,6 @@ if util_str == "exit":
     message = "Aurevoir"
     getMessage(message)
 
-util = int(util_str)
 
 print("Pseudo:")
 pseudo = input('> ').capitalize()
@@ -96,6 +150,12 @@ print()
 print("Mot de passe:")
 mdp = input('> ')
 
-choixUtil(util, pseudo, mdp)
+choixUtil(util, pseudo, mdp, addUtil)
+
+
+nouvelUtilisateur = Utilisateur(addUtil + 1, "firstName", "name", 'pseudo1', "mdp")
+listeUtilisateur.append(nouvelUtilisateur)
+
+getUtilisateurs(listeUtilisateur)
 
 
