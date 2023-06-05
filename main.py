@@ -43,7 +43,6 @@ def menuUtilisateur():
     # Affiche la liste des utilisateurs
     getUtilisateurs(listeUtilisateur)
 
-
     # Affiche une option pour créer un utilisateur
     for i in enumerate(listeUtilisateur, 1):
         addUtil = len(listeUtilisateur) + 1
@@ -126,7 +125,6 @@ def choixUtil(util, pseudo, mdp, addUtil):
 
         if util == addUtil + 1:
             addUtilisateur()
-
 
 menuUtilisateur()
 
