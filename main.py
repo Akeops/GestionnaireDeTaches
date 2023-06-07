@@ -55,20 +55,19 @@ def getTaches():
         result = cursor.fetchall()
 
         for row in result:
-            print(f" {row[0]},  {row[1]},  {row[2]},  {row[3]}, {row[4]}")
+            print(f" {row[0]},  {row[1]},  {row[2]},  {row[3]}")
 
         conn.close()
     except sqlite3.Error as e:
         print('Erreur lors de la récupération des utilisateurs:', e)
 
 # Section de TEST des fonctions
-
-print("\n getTaches() : \n")
+'''print("\n getTaches() : \n")
 print(getTaches())
 
 print("\n getUtilisateurs() : \n")
 print(getUtilisateurs())
-
+'''
 
 def getMessage(message):
     max_size = len(message)
@@ -78,96 +77,36 @@ def getMessage(message):
     print('+', message, '+')
     print('+' * (len(message) + 4))
 
+def accueilUtilisateur(liste):
+    print(f"Bienvenue {liste[2]} {liste[1]}")
 def menuUtilisateur():
-    # Début du programme
     print()
-    print("Bonjour, qui êtes-vous ? Taper 'EXIT' si vous voulez quitter.")
+    print("Bonjour, qui êtes-vous ?")
+    # J'affiche toute la table des utilisateurs
+    getUtilisateurs()
 
-    # Affiche la liste des utilisateurs
-    getUtilisateurs(listeUtilisateur)
+    try:
+        conn = sqlite3.connect('baseDeDonnee')
+        cursor = conn.cursor()
 
-    # Affiche une option pour créer un utilisateur
-    for i in enumerate(listeUtilisateur, 1):
-        addUtil = len(listeUtilisateur) + 1
-    print(f"{addUtil} -  Créer un nouvel utilisateur")
+        cursor.execute(f"SELECT * FROM utilisateur")
+        result = cursor.fetchall()
 
-    util_str = input('> ').lower()
-    while not util_str.isdigit() or util_str != "exit" and not 1 <= int(util_str) <= addUtil:
-        print("Choisissez un bon utilisateur.")
-        util_str = input('> ')
-
-    if util_str == "exit":
-        message = "Aurevoir"
-        getMessage(message)
-    elif int(util_str) == addUtil:
-        addUtilisateur(addUtil)
-    util = int(util_str)
-
-    print("Pseudo:")
-    pseudo = input('> ').capitalize()
-    print()
-
-    print("Mot de passe:")
-    mdp = input('> ')
-
-    choixUtil(util, pseudo, mdp, addUtil)
-
-def addUtilisateur(addUtil):
-
-    #Nom nouvel utilisateur
-
-    print("Quel est votre nom ?")
-    name = input('> ')
-    while name.isdigit():
-        print('Votre nom ne peut pas comporter de nombre')
-        name = input('> ')
-
-    # Prénom nouvel utilisateur
-
-    print("Quel est votre prénom ?")
-    firstName = input('> ').capitalize()
-    while firstName.isdigit():
-        print('Votre prénom ne peut pas comporter de nombre')
-        firstName = input('> ').capitalize()
-
-    # Pseudo nouvel utilisateur
-
-    print("Choisissez un pseudo, il vous permettra de vous connecter")
-    pseudo = input('> ').capitalize()
-    for i, utilisateur in enumerate(listeUtilisateur, 1):
-        while utilisateur.pseudoU == pseudo:
-            print("Ce pseudo est déjà prit, veuillez en prendre un nouveau.")
-            pseudo = input('> ').capitalize()
-
-    # Mot de passe nouvel utilisateur
-
-    print("Choisissez un mot de passe")
-    mdp = input('> ')
-
-    nouvelUtilisateur = Utilisateur(addUtil + 1, firstName, name, pseudo, mdp)
-    listeUtilisateur.append(nouvelUtilisateur)
-
-    for i, utilisateur in enumerate(listeUtilisateur, 1):
-        if utilisateur.pseudoU == pseudo:
-            print()
-            message = "Félicitations, vous faîtes maintenant partie de l'équipage !"
-            getMessage(message)
-
-    menuUtilisateur()
-
-def choixUtil(util, pseudo, mdp, addUtil):
-    for i, utilisateur in enumerate(listeUtilisateur, 1):
-        if util == i:
-            if pseudo == utilisateur.pseudoU and mdp == utilisateur.mdpU:
-                message = f"Bienvenue, {utilisateur.prenomU}"
-                getMessage(message)
-            else:
-                print("Il y a une erreur dans le pseudo ou le mot de passe.")
-                menuUtilisateur()
+        util_str = input('> ').lower()
+        while not util_str.isdigit() and not 1 <= int(util_str) <= 10:
+            print("Choisissez un bon utilisateur.")
+            util_str = input('> ')
+        util = int(util_str)
+        for row in result:
+            if row[0] == util:
+                liste = [row[0], row[1], row[2], row[3], row[4]]
+                accueilUtilisateur(liste)
+                #print(f"Bienvenue {row[2]} {row[1]}")
+    except:
+        print('erreur')
 
 
-        if util == addUtil + 1:
-            addUtilisateur()
+
 
 menuUtilisateur()
 
