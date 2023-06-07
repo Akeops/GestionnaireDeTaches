@@ -1,9 +1,14 @@
-# Création d'un gestionnaire de tâches : développez une application qui permet aux utilisateurs de créer, organiser et gérer
-# leurs tâches quotidiennes.
-#
-#
-# Gestionnaire de tâches : Vous pouvez créer un programme qui permet aux utilisateurs
-# de gérer leurs tâches en affichant des menus, en prenant des entrées de l'utilisateur et en affichant les tâches en cours.
+import sqlite3
+
+# Connexion à la base de données
+conn = sqlite3.connect('baseDeDonnee')
+
+try:
+    conn = sqlite3.connect('BaseDeDonnee')
+    print("Connecté à la base de données.")
+    conn.close()
+except sqlite3.Error as e:
+    print("Erreur de connexion à la base de données:", e)
 
 class Utilisateur:
     def __init__ (self, idU, prenomU, nomU, pseudoU, mdpU):
@@ -13,20 +18,58 @@ class Utilisateur:
         self.pseudoU = pseudoU
         self.mdpU = mdpU
 @staticmethod
-def getUtilisateurs(listeUtilisateur):
-    for i, utilisateur in enumerate(listeUtilisateur, 1):
-        print(f"{i} -  {utilisateur.prenomU} {utilisateur.nomU}")
+def getUtilisateurs():
+    try:
+        conn = sqlite3.connect('baseDeDonnee')
+        cursor = conn.cursor()
+
+        # Exécution de la requête SELECT pour récupérer les données de la table spécifiée
+        cursor.execute(f"SELECT * FROM utilisateur")
+        result = cursor.fetchall()
+
+        for row in result:
+            print(f" {row[0]},  {row[1]},  {row[2]},  {row[3]}, {row[4]}")
+
+        conn.close()
+    except sqlite3.Error as e:
+        print('Erreur lors de la récupération des utilisateurs:', e)
 
 
 
-# Création de quelques objets Utilisateur
-utilisateur1 = Utilisateur(1 , "Andoni", "Lalanne", "Maven", "123")
-utilisateur2 = Utilisateur(2 , "Annabeth", "Chase", "Beth", "456")
+class Tache:
+    def __init__ (self, idT, nomT, date_creation, idU):
+        self.idT = idT
+        self.nomT = nomT
+        self.date_creation = date_creation
+        self.idU = idU
 
-# Création de la liste des utilisateurs
-listeUtilisateur = []
-listeUtilisateur.append(utilisateur1)
-listeUtilisateur.append(utilisateur2)
+
+@staticmethod
+def getTaches():
+    try:
+        conn = sqlite3.connect('baseDeDonnee')
+        cursor = conn.cursor()
+
+        # Exécution de la requête SELECT pour récupérer les données de la table spécifiée
+        cursor.execute(f"SELECT * FROM tache")
+        result = cursor.fetchall()
+
+        for row in result:
+            print(f" {row[0]},  {row[1]},  {row[2]},  {row[3]}, {row[4]}")
+
+        conn.close()
+    except sqlite3.Error as e:
+        print('Erreur lors de la récupération des utilisateurs:', e)
+
+# Section de TEST des fonctions
+
+print("\n getTaches() : \n")
+print(getTaches())
+
+print("\n getUtilisateurs() : \n")
+print(getUtilisateurs())
+
+
 def getMessage(message):
     max_size = len(message)
     message += ' ' * (max_size - len(message))
