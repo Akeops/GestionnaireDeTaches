@@ -61,24 +61,41 @@ def getTaches():
     except sqlite3.Error as e:
         print('Erreur lors de la récupération des utilisateurs:', e)
 
+def getTachesByIdU(idU):
+    try:
+        conn = sqlite3.connect('baseDeDonnee')
+        cursor = conn.cursor()
+
+        # Exécution de la requête SELECT pour récupérer les données de la table spécifiée
+        cursor.execute(f"SELECT * FROM tache WHERE idu = {idU}")
+        result = cursor.fetchall()
+        i = 1
+        for row in result:
+            print(f"{i} - {row[1]},  {row[2]}, {row[4]}")
+            i += 1
+
+        conn.close()
+    except sqlite3.Error as e:
+        print('Erreur lors de la récupération des utilisateurs:', e)
+
 # Section de TEST des fonctions
 '''print("\n getTaches() : \n")
 print(getTaches())
 
 print("\n getUtilisateurs() : \n")
 print(getUtilisateurs())
-'''
 
-def getMessage(message):
-    max_size = len(message)
-    message += ' ' * (max_size - len(message))
-    print()
-    print('+' * (len(message) + 4))
-    print('+', message, '+')
-    print('+' * (len(message) + 4))
+print("\n getUtilisateurs() : \n")
+print(getTachesByIdU(1))'''
+
 
 def accueilUtilisateur(liste):
     print(f"Bienvenue {liste[2]} {liste[1]}")
+
+    print('Voici vos tâches :')
+    getTachesByIdU(liste[0])
+
+
 def menuUtilisateur():
     print()
     print("Bonjour, qui êtes-vous ?")
@@ -97,17 +114,28 @@ def menuUtilisateur():
             print("Choisissez un bon utilisateur.")
             util_str = input('> ')
         util = int(util_str)
+
+        print('Quel est votre pseudo ?')
+        pseudo = input('> ')
+
+        print('Quel est votre mot de passe ?')
+        mdp = input('> ')
+
         for row in result:
             if row[0] == util:
-                liste = [row[0], row[1], row[2], row[3], row[4]]
-                accueilUtilisateur(liste)
-                #print(f"Bienvenue {row[2]} {row[1]}")
+                if row[3] == pseudo and row[4] == mdp:
+                    # Connection de l'utilisateur
+                    liste = [row[0], row[1], row[2], row[3], row[4]]
+                    accueilUtilisateur(liste)
+                else:
+                    print('Le pseudo ou le mot de passe ne correspond pas.')
+                    menuUtilisateur()
     except:
         print('erreur')
 
 
 
-
+# Début du code
 menuUtilisateur()
 
 
