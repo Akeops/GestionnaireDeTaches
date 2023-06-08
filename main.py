@@ -1,5 +1,6 @@
 import sqlite3
 from datetime import date
+import traceback
 
 # Connexion à la base de données
 conn = sqlite3.connect('baseDeDonnee')
@@ -46,21 +47,20 @@ class Tache:
 
 
 @staticmethod
-def getTaches():
+def supprTache(idSupprInt):
     try:
         conn = sqlite3.connect('baseDeDonnee')
         cursor = conn.cursor()
 
-        # Exécution de la requête SELECT pour récupérer les données de la table spécifiée
-        cursor.execute(f"SELECT * FROM tache")
-        result = cursor.fetchall()
+        cursor.execute(f"DELETE FROM tache WHERE idT = {idSupprInt};")
+        conn.commit()
 
-        for row in result:
-            print(f" {row[0]},  {row[1]},  {row[2]},  {row[3]}")
-
+        cursor.close()
         conn.close()
+        print('Suppression réussi')
     except sqlite3.Error as e:
-        print('Erreur lors de la récupération des utilisateurs:', e)
+        print('Erreur lors de la suppression de la tâche:', e)
+
 
 def getTachesByIdU(idU):
     try:
@@ -71,45 +71,50 @@ def getTachesByIdU(idU):
         result = cursor.fetchall()
         i = 1
         for row in result:
-            print(f"{i} - {row[1]}, le {row[2]} | '{row[4]}'")
+            print(f"{row[0]} - {row[1]}, le {row[2]} | '{row[4]}'")
             i += 1
 
         print(f"{len(result) + 1} - Ajouter une nouvelle tâche")
+        print(f"{len(result) + 2} - Supprimer une tâche")
 
         choix = input('> ')
-        while not choix == len(result) + 1:
-            if (int(choix) == len(result) + 1):
-                print("Ajout d'une tâche")
+        while int(choix) != len(result) + 1 and int(choix) != len(result) + 2:
+            print("Il n'est pas possible de faire cette action.")
+            choix = input('> ')
 
-                print('Nom de la tâche :')
-                nomT = input('> ')
+        choixInt = int(choix)
+        if choixInt == len(result) + 1:
+            print("Ajout d'une tâche")
 
-                print('Description de la tâche :')
-                description = input('> ')
-                dateDuJour = date.today()
-                addTache(nomT, dateDuJour, idU, description)
-                print()
-                print('La tache a été ajouté.')
-                getTachesByIdU(idU)
-            else:
-                print("Il n'est pas possible de faire ça")
-                choix = input('> ')
+            print('Nom de la tâche :')
+            nomT = input('> ')
+
+            print('Description de la tâche :')
+            description = input('> ')
+            dateDuJour = date.today()
+            addTache(nomT, dateDuJour, idU, description)
+            print()
+            print('La tache a été ajouté.')
+            getTachesByIdU(idU)
+
+        elif choixInt == len(result) + 2:
+            print('Quelle tâche voulez-vous supprimer ?')
+            idSupprInt = int(input('> '))
+
+            supprTache(idSupprInt)
+        else:
+            print('Sorry')
 
         conn.close()
-
     except sqlite3.Error as e:
         print('Erreur lors de la récupération des utilisateurs:', e)
 
-
-
 def addTache(nomT, dateDuJour, idU, description):
-
     try:
         conn = sqlite3.connect('baseDeDonnee')
         cursor = conn.cursor()
 
         cursor.execute(f"INSERT INTO tache (nomT, date_creation, idU, description) VALUES ('{nomT}', '{dateDuJour}', {idU}, '{description}')")
-        #INSERT INTO tache(nomT, date_creation, idU, description) VALUES('nouvelleTache', '21/05/1999', 1, 'bla')
         conn.commit()
 
         cursor.close()
@@ -117,19 +122,6 @@ def addTache(nomT, dateDuJour, idU, description):
     except Exception as e:
         print("Une erreur s'est produite lors de l'insertion :", e)
 
-#nomT, date_creation, idU, description
-# Section de TEST des fonctions
-'''print("\n getTaches() : \n")
-print(getTaches())
-
-print("\n getUtilisateurs() : \n")
-print(getUtilisateurs())
-
-print("\n getUtilisateurs() : \n")
-print(getTachesByIdU(1))
-
-print("\n addTache(nom, description, idU): : \n")
-print(addTache('Brico', 'bla', 1))'''
 
 def accueilUtilisateur(liste):
     print(f"Bienvenue {liste[2]} {liste[1]}")
@@ -174,8 +166,9 @@ def menuUtilisateur():
                 else:
                     print('Le pseudo ou le mot de passe ne correspond pas.')
                     menuUtilisateur()
-    except:
-        print('erreur')
+    except Exception as e:
+        print("Une erreur s'est produite :", e)
+        traceback.print_exc()
 
 
 
@@ -185,4 +178,13 @@ menuUtilisateur()
 
 
 
+''''#nomT, date_creation, idU, description
+# Section de TEST des fonctions
+print("\n getTaches() : \n")
+print(getTaches())
 
+print("\n getUtilisateurs() : \n")
+print(getUtilisateurs())
+
+print("\n getUtilisateurs() : \n")
+print(getTachesByIdU(1))'''
