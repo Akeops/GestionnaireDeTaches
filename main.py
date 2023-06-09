@@ -64,7 +64,7 @@ def supprTache(idSupprInt, liste):
     except sqlite3.Error as e:
         print('Erreur lors de la suppression de la tâche:', e)
 
-
+# C'est dans cette fonction qu'il y a tous les choix de l'utilisateur par rapport aux fonctions.
 def getTachesByIdU(idU, liste):
     try:
         conn = sqlite3.connect('baseDeDonnee')
@@ -81,9 +81,10 @@ def getTachesByIdU(idU, liste):
 
         print(f"{len(result) + 1} - Ajouter une nouvelle tâche")
         print(f"{len(result) + 2} - Supprimer une tâche")
+        print(f"{len(result) + 3} - Retour à la liste des utilisateurs")
 
         choix = input('> ')
-        while int(choix) != len(result) + 1 and int(choix) != len(result) + 2:
+        while int(choix) != len(result) + 1 and int(choix) != len(result) + 2 and int(choix) != len(result) + 3:
             print("Il n'est pas possible de faire cette action.")
             choix = input('> ')
 
@@ -106,6 +107,10 @@ def getTachesByIdU(idU, liste):
             print('Quelle tâche voulez-vous supprimer ?')
             idSupprInt = int(input('> '))
             supprTache(idSupprInt, liste)
+
+        elif choixInt == len(result) + 3:
+            menuUtilisateur()
+            liste = []
         else:
             print('Sorry')
 
