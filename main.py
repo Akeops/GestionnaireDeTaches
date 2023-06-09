@@ -47,7 +47,7 @@ class Tache:
 
 
 @staticmethod
-def supprTache(idSupprInt):
+def supprTache(idSupprInt, liste):
     try:
         conn = sqlite3.connect('baseDeDonnee')
         cursor = conn.cursor()
@@ -58,14 +58,18 @@ def supprTache(idSupprInt):
         cursor.close()
         conn.close()
         print('Suppression réussi')
+        print()
+
+        getTachesByIdU(liste[0], liste)
     except sqlite3.Error as e:
         print('Erreur lors de la suppression de la tâche:', e)
 
 
-def getTachesByIdU(idU):
+def getTachesByIdU(idU, liste):
     try:
         conn = sqlite3.connect('baseDeDonnee')
         cursor = conn.cursor()
+
 
         cursor.execute(f"SELECT * FROM tache WHERE idu = {idU}")
         result = cursor.fetchall()
@@ -73,6 +77,7 @@ def getTachesByIdU(idU):
         for row in result:
             print(f"{row[0]} - {row[1]}, le {row[2]} | '{row[4]}'")
             i += 1
+
 
         print(f"{len(result) + 1} - Ajouter une nouvelle tâche")
         print(f"{len(result) + 2} - Supprimer une tâche")
@@ -92,16 +97,15 @@ def getTachesByIdU(idU):
             print('Description de la tâche :')
             description = input('> ')
             dateDuJour = date.today()
-            addTache(nomT, dateDuJour, idU, description)
+            addTache(nomT, dateDuJour, idU, description, liste)
             print()
             print('La tache a été ajouté.')
-            getTachesByIdU(idU)
+            getTachesByIdU(idU, liste)
 
         elif choixInt == len(result) + 2:
             print('Quelle tâche voulez-vous supprimer ?')
             idSupprInt = int(input('> '))
-
-            supprTache(idSupprInt)
+            supprTache(idSupprInt, liste)
         else:
             print('Sorry')
 
@@ -109,16 +113,17 @@ def getTachesByIdU(idU):
     except sqlite3.Error as e:
         print('Erreur lors de la récupération des utilisateurs:', e)
 
-def addTache(nomT, dateDuJour, idU, description):
+def addTache(nomT, dateDuJour, idU, description, liste):
     try:
         conn = sqlite3.connect('baseDeDonnee')
         cursor = conn.cursor()
 
-        cursor.execute(f"INSERT INTO tache (nomT, date_creation, idU, description) VALUES ('{nomT}', '{dateDuJour}', {idU}, '{description}')")
+        cursor.execute(f'INSERT INTO tache (nomT, date_creation, idU, description) VALUES ("{nomT}", "{dateDuJour}", {idU}, "{description}")')
         conn.commit()
 
         cursor.close()
         conn.close()
+        getTachesByIdU(idU, liste)
     except Exception as e:
         print("Une erreur s'est produite lors de l'insertion :", e)
 
@@ -129,7 +134,7 @@ def accueilUtilisateur(liste):
     print()
 
     print('Voici vos tâches :')
-    getTachesByIdU(liste[0])
+    getTachesByIdU(liste[0], liste)
 
 
 def menuUtilisateur():
