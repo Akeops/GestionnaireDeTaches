@@ -133,6 +133,19 @@ def addTache(nomT, dateDuJour, idU, description, liste):
         print("Une erreur s'est produite lors de l'insertion :", e)
 
 
+def addUtilisateur(prenomU, nomU, pseudoU, mdpU):
+    try:
+        conn = sqlite3.connect('baseDeDonnee')
+        cursor = conn.cursor()
+
+        cursor.execute(f'INSERT INTO utilisateur (prenomU, nomU, pseudoU, mdpU) VALUES ("{prenomU}", "{nomU}", "{pseudoU}", "{mdpU}")')
+        conn.commit()
+
+        cursor.close()
+        conn.close()
+        menuUtilisateur()
+    except Exception as e:
+        print("Une erreur s'est produite lors de l'insertion :", e)
 def accueilUtilisateur(liste):
     print(f"Bienvenue {liste[2]} {liste[1]}")
 
@@ -155,20 +168,26 @@ def menuUtilisateur():
         cursor.execute(f"SELECT * FROM utilisateur")
         result = cursor.fetchall()
 
-        util_str = input('> ').lower()
-        while not util_str.isdigit() and not 1 <= int(util_str) <= 10:
-            print("Choisissez un bon utilisateur.")
-            util_str = input('> ')
-        util = int(util_str)
+        print(f"{len(result) + 1} - Ajouter un nouvel utilisateur")
+        #print(f"{len(result) + 2} - Supprimer une tâche")
 
-        print('Quel est votre pseudo ?')
-        pseudo = input('> ')
+        choix_str = input('> ')
+        if choix_str.isdigit() == False:
+            print('Seulement les nombres sont acceptés')
+            menuUtilisateur()
 
-        print('Quel est votre mot de passe ?')
-        mdp = input('> ')
+        while not 0 < int(choix_str) < len(result) and int(choix_str) != len(result) + 1:
+            print("Cette action n'est pas possible")
+            choix_str = input('> ')
 
+        choix = int(choix_str)
         for row in result:
-            if row[0] == util:
+            if choix == row[0]:
+                print('Quel est votre pseudo ?')
+                pseudo = input('> ')
+
+                print('Quel est votre mot de passe ?')
+                mdp = input('> ')
                 if row[3] == pseudo and row[4] == mdp:
                     # Connection de l'utilisateur
                     liste = [row[0], row[1], row[2], row[3], row[4]]
@@ -176,6 +195,28 @@ def menuUtilisateur():
                 else:
                     print('Le pseudo ou le mot de passe ne correspond pas.')
                     menuUtilisateur()
+            elif choix == len(result) + 1:
+                print("Ajout d'une tâche")
+
+                print('Votre prénom :')
+                prenomU = input('> ')
+
+                print('Votre nom :')
+                nomU = input('> ')
+
+                print('Votre pseudo :')
+                pseudoU = input('> ')
+                for row in result:
+                    if pseudoU == row[2]:
+                        print('Vous ne pouvez pas choisir ce pseudo, il est déjà utilisé.')
+                        pseudoU = input('> ')
+
+                print('Votre mot de passe :')
+                mdpU = input('> ')
+
+                addUtilisateur(prenomU, nomU, pseudoU, mdpU)
+                print()
+                print('Vous avez ajouté un nouvel utilisateur.')
     except Exception as e:
         print("Une erreur s'est produite :", e)
         traceback.print_exc()
