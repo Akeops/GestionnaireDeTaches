@@ -204,6 +204,7 @@ def menuUtilisateur():
 
         cursor.execute(f"SELECT idU FROM utilisateur")
         result2 = cursor.fetchall()
+        #Permet de récupérer les id des Utilisateurs pour pouvoir faire un sorte que l'utilisateur ne choisisse que des id existants
         listeID = [row[0] for row in result2]
 
         print(f"{len(result) + 1} - S'inscrire*")
@@ -215,7 +216,7 @@ def menuUtilisateur():
             menuUtilisateur()
 
         # Vérifie que l'utilisateur entre bien un id correcte (En fonction des id disponiblent dans la table utilisateur)
-        if int(choix_str) in listeID:
+        if int(choix_str) in listeID or int(choix_str) == len(result) + 1:
             choix = int(choix_str)
             for row in result:
                 if choix == row[0]:
@@ -255,6 +256,7 @@ def menuUtilisateur():
                     print('Vous avez ajouté un nouvel utilisateur.')
         else:
             print('Ce choix nest pas possible')
+            print(len(result))
             menuUtilisateur()
     except Exception as e:
         print("Une erreur s'est produite :", e)
